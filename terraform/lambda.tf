@@ -85,5 +85,5 @@ resource "aws_lambda_event_source_mapping" "sqs_event_trigger" {
   event_source_arn = aws_sqs_queue.event-source-mapping-queue.arn
   function_name    = aws_lambda_function.event-source-mapping-function.arn
   enabled          = true
-  batch_size       = 10  
+  batch_size       = 10
 }

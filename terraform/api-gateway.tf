@@ -32,15 +32,15 @@ resource "aws_api_gateway_rest_api" "event-source-mapping-api" {
 resource "aws_api_gateway_resource" "api" {
   rest_api_id = aws_api_gateway_rest_api.event-source-mapping-api.id
   parent_id   = aws_api_gateway_rest_api.event-source-mapping-api.root_resource_id
-  path_part   = "api"  
+  path_part   = "api"
 }
 
 resource "aws_api_gateway_method" "event-source-mapping-api-method" {
-  rest_api_id   = aws_api_gateway_rest_api.event-source-mapping-api.id
-  resource_id   = aws_api_gateway_resource.api.id
-  api_key_required = false  
-  http_method   = "POST"
-  authorization = "NONE"
+  rest_api_id      = aws_api_gateway_rest_api.event-source-mapping-api.id
+  resource_id      = aws_api_gateway_resource.api.id
+  api_key_required = false
+  http_method      = "POST"
+  authorization    = "NONE"
 }
 
 resource "aws_api_gateway_integration" "event-source-mapping-api-integration" {
@@ -55,7 +55,7 @@ resource "aws_api_gateway_integration" "event-source-mapping-api-integration" {
     "integration.request.header.Content-Type" = "'application/x-www-form-urlencoded'"
   }
   request_templates = {
-    "application/json" = "Action=SendMessage&MessageBody=$input.body"        
+    "application/json" = "Action=SendMessage&MessageBody=$input.body"
   }
 }
 
@@ -70,14 +70,14 @@ resource "aws_api_gateway_integration_response" "integration_response_200" {
   rest_api_id = aws_api_gateway_rest_api.event-source-mapping-api.id
   resource_id = aws_api_gateway_resource.api.id
   http_method = aws_api_gateway_method.event-source-mapping-api-method.http_method
-  status_code = aws_api_gateway_method_response.method_response_200.status_code  
+  status_code = aws_api_gateway_method_response.method_response_200.status_code
   depends_on = [
     aws_api_gateway_integration.event-source-mapping-api-integration
   ]
 }
 
 resource "aws_api_gateway_deployment" "event-source-mapping-api-deployment" {
-  rest_api_id = aws_api_gateway_rest_api.event-source-mapping-api.id  
+  rest_api_id = aws_api_gateway_rest_api.event-source-mapping-api.id
   triggers = {
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.api.id,
